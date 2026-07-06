@@ -131,3 +131,33 @@ FROM RankingPorIdioma
 WHERE posicion_en_idioma <= 3
 ORDER BY language, posicion_en_idioma
 LIMIT 5;
+
+
+
+--EXPORTAR DATOS DEL CALENDARIO (DIAS) EN CSV PARA TABLEAU
+USE twitch_analysis;
+
+SELECT 'Dia', 'Cantidad_Streamers_Con_Pico', 'Promedio_Seguidores_Por_Stream'
+UNION ALL
+SELECT day_with_most_followers_gained, 
+       CAST(COUNT(*) AS CHAR),
+       CAST(ROUND(AVG(followers_gained_per_stream), 0) AS CHAR)
+FROM streamers2024
+WHERE day_with_most_followers_gained IS NOT NULL AND day_with_most_followers_gained != ''
+GROUP BY day_with_most_followers_gained
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/datos_calendario.csv'
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+--EXPORTAR IDIOMAS EN CSV PARA TABLEAU
+SELECT 'Idioma', 'Total_Streamers'
+UNION ALL
+SELECT language, CAST(COUNT(*) AS CHAR)
+FROM streamers2024
+WHERE language IS NOT NULL AND language != ''
+GROUP BY language
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/datos_idiomas.csv'
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
