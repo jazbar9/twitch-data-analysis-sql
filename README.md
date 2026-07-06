@@ -5,6 +5,8 @@ Este proyecto de analítica de datos profundiza en el comportamiento, métricas 
 
 **Caso de Negocio:** El objetivo es simular un rol de consultor de datos para una agencia de marketing digital. El análisis busca identificar qué perfiles de streamers, idiomas y categorías de contenido generan el mayor engagement y retorno de inversión (ROI) para campañas de patrocinio de marcas.
 
+▶️ **[Ver Dashboard Interactivo en Tableau Public]https://public.tableau.com/views/TwitchMarketAudienceAnalysis_/TwitchMarketAudienceAnalysis?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link**
+
 ---
 
 ## 🛠️ 2. Stack Tecnológico
