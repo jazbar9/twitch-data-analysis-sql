@@ -71,3 +71,63 @@ FROM streamers2024
 WHERE day_with_most_followers_gained IS NOT NULL AND day_with_most_followers_gained != ''
 GROUP BY day_with_most_followers_gained
 ORDER BY Cantidad_Streamers_Con_Pico DESC;
+
+
+-------------------
+--Fase 2: Análisis Avanzado (CTEs & Window Functions)
+-- 🚀 a) CTE: Segmentación Optimizada por Duración Real de Transmisión (2024)
+--Auditoria de nuestros datos en average_stream_duration
+SELECT DISTINCT average_stream_duration
+FROM streamers2024;
+
+WITH SegmentacionStreamers AS (
+    SELECT name, language, most_streamed_game, average_stream_duration, total_followers,
+           CASE 
+               WHEN average_stream_duration >= 12 THEN 'Maratónico Extremo (+12 hrs)'
+               WHEN average_stream_duration >= 6 THEN 'Sesión Larga (6-12 hrs)'
+               ELSE 'Estándar/Corta (-6 hrs)'
+           END AS tipo_duracion
+    FROM streamers2024
+    WHERE name IS NOT NULL AND name != ''
+)
+-- Analizamos el impacto real luego de la auditoria 
+SELECT tipo_duracion, 
+       COUNT(*) AS cantidad_streamers,
+       ROUND(AVG(total_followers), 0) AS promedio_seguidores_totales
+FROM SegmentacionStreamers
+GROUP BY tipo_duracion
+ORDER BY promedio_seguidores_totales DESC;
+
+-- 👑 WINDOW FUNCTION: Top 3 Streamers con más seguidores por cada Idioma (2024)
+WITH RankingPorIdioma AS (
+    SELECT name, language, total_followers, most_streamed_game,
+           DENSE_RANK() OVER(PARTITION BY language ORDER BY total_followers DESC) AS posicion_en_idioma
+    FROM streamers2024
+    WHERE language IS NOT NULL AND language != '' AND name != ''
+)
+SELECT language AS Idioma, 
+       posicion_en_idioma AS Top, 
+       name AS Streamer, 
+       total_followers AS Seguidores_Totales,
+       most_streamed_game AS Juego_Principal
+FROM RankingPorIdioma
+WHERE posicion_en_idioma <= 3
+ORDER BY language, posicion_en_idioma;
+
+
+-- 👑b) WINDOW FUNCTION: Top 3 Streamers con más seguidores por cada Idioma (2024)
+WITH RankingPorIdioma AS (
+    SELECT name, language, total_followers, most_streamed_game,
+           DENSE_RANK() OVER(PARTITION BY language ORDER BY total_followers DESC) AS posicion_en_idioma
+    FROM streamers2024
+    WHERE language IS NOT NULL AND language != '' AND name != ''
+)
+SELECT language AS Idioma, 
+       posicion_en_idioma AS Top, 
+       name AS Streamer, 
+       total_followers AS Seguidores_Totales,
+       most_streamed_game AS Juego_Principal
+FROM RankingPorIdioma
+WHERE posicion_en_idioma <= 3
+ORDER BY language, posicion_en_idioma
+LIMIT 5;

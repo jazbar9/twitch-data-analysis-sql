@@ -5,7 +5,6 @@ Este proyecto de analítica de datos profundiza en el comportamiento, métricas 
 
 **Caso de Negocio:** El objetivo es simular un rol de consultor de datos para una agencia de marketing digital. El análisis busca identificar qué perfiles de streamers, idiomas y categorías de contenido generan el mayor engagement y retorno de inversión (ROI) para campañas de patrocinio de marcas.
 
-
 ---
 
 ## 🛠️ 2. Stack Tecnológico
@@ -76,3 +75,23 @@ Al combinar las funciones de agregación `COUNT(*)` y `AVG()`, se descubrió una
    * *Viernes (Máxima Eficiencia):* Presenta el promedio más alto de conversión con **3,524 seguidores ganados por transmisión**.
    * *Recomendación:* Para marcas con presupuestos limitados que buscan maximizar el retorno de inversión (ROI) a través de nuevos seguidores, se aconseja pautar patrocinios los **Viernes**, ya que la audiencia muestra una mayor predisposición a descubrir nuevos canales.
 3. **Filtro de Contenido:** El análisis de contenido maduro (`mature`) revela si las marcas con políticas familiares estrictas sufren una penalización de alcance al evitar canales clasificados +18.
+
+
+## 🚀 Fase 2: Análisis Avanzado (CTEs & Window Functions)
+
+### A) Optimización Estratégica de Horas de Transmisión (Uso de CTE)
+Se implementó una Expresión de Tabla Común (CTE) con lógica condicional `CASE WHEN` para clasificar a los top 1,000 streamers según su duración promedio de transmisión. Los resultados revelaron un insight contraintuitivo de negocio:
+
+* **Estándar/Corta (-6 hrs):** 597 streamers | **963,350 seguidores promedio** (Líder en audiencia).
+* **Sesión Larga (6-12 hrs):** 358 streamers | **927,079 seguidores promedio**.
+* **Maratónico Extremo (+12 hrs):** 44 streamers | **260,679 seguidores promedio**.
+
+**Insight de Negocio:** Existe un punto de rendimiento decreciente en la duración de las transmisiones. Los creadores con sesiones más cortas y enfocadas logran una retención y una masa de seguidores drásticamente mayor. 
+
+**Recomendación de Campaña:** Para optimizar el presupuesto de patrocinio, la agencia debe priorizar a streamers de sesiones cortas (menos de 6 horas), ya que ofrecen un alcance promedio un **269% mayor** por creador en comparación con los perfiles maratónicos, evitando además el desgaste de la audiencia en transmisiones excesivamente largas.
+
+
+### B) Microsegmentación de Líderes de Mercado por Idioma (Uso de Window Function)
+Para evitar que el volumen masivo de los streamers angloparlantes ocultara a los líderes de otros mercados regionales, se implementó una función de ventana avanzada (`DENSE_RANK() OVER (PARTITION BY...)`). Esta consulta segmentó los 1,000 registros por su idioma nativo y aisló con precisión a los 3 creadores más grandes de cada región del planeta.
+
+**Insight de Negocio:** Este enfoque permite a la agencia realizar estrategias de "Marketing de Nicho Regional". En lugar de competir por los streamers globales más costosos, el análisis identifica con un solo script a los reyes indiscutibles de mercados específicos (como `imod` en el mercado Árabe o `asiagodtonegg3be0` en el mercado Chino), optimizando la pauta publicitaria en campañas de localización geográfica.
